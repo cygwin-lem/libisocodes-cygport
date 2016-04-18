@@ -1,0 +1,26 @@
+--- origsrc/libisocodes-1.2.2/Makefile.am	2014-07-05 15:46:59.000000000 -0500
++++ src/libisocodes-1.2.2/Makefile.am	2016-04-18 13:09:30.067709900 -0500
+@@ -65,7 +65,7 @@ VALAFLAGS = \
+ libisocodes_la_CPPFLAGS = -include config.h -DLOCALEDIR=\""$(localedir)"\"
+ libisocodes_la_CFLAGS = $(GOBJECT_CFLAGS) $(GLIB_CFLAGS) $(LIBXML_CFLAGS) $(GEE_CFLAGS)
+ libisocodes_la_LIBADD = $(GOBJECT_LIBS) $(GLIB_LIBS) $(LIBXML_LIBS) $(GEE_LIBS)
+-libisocodes_la_LDFLAGS = -version-info $(LIBISOCODES_LT_VERSION)
++libisocodes_la_LDFLAGS = -version-info $(LIBISOCODES_LT_VERSION) -no-undefined
+ 
+ DISTCLEANFILES = libisocodes.pc
+ MAINTAINERCLEANFILES = config.h.in~ libisocodes.h libisocodes.vapi libisocodes-$(VERSION).gir
+@@ -94,8 +94,13 @@ libisocodes-$(VERSION).gir: $(lib_LTLIBR
+ girdir = $(datadir)/gir-1.0
+ gir_DATA = libisocodes-$(VERSION).gir
+ 
++# We have to extract our own dlname from libisocodes.la; see bgo#658002.
++# This is what g-ir-scanner does.
++libisocodes_dlname = \
++       `$(SED) -n "s/^dlname='\([A-Za-z0-9.+-]\+\)'/\1/p" libisocodes.la`
++
+ libisocodes-$(VERSION).typelib: libisocodes-$(VERSION).gir
+-	g-ir-compiler --shared-library=libisocodes.so --output=$@ $<
++	g-ir-compiler --shared-library=$(libisocodes_dlname) --output=$@ $<
+ 
+ typelibdir = $(libdir)/girepository-1.0
+ typelib_DATA = libisocodes-$(VERSION).typelib

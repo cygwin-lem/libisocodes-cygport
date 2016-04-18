@@ -1,0 +1,30 @@
+NAME="libisocodes"
+VERSION=1.2.2
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="GObject library for ISO country, language and currency codes"
+DESCRIPTION="This library can be used to easily access XML data of the iso-codes
+package. It will provide an abstraction layer to handle both the version 3 and
+the upcoming version 4 of iso-codes. Moreover, all available translations can
+be used as well."
+HOMEPAGE="http://pkg-isocodes.alioth.debian.org/"
+SRC_URI="http://pkg-isocodes.alioth.debian.org/downloads/libisocodes-${VERSION}.tar.xz"
+PATCH_URI="1.2.2-no-undefined.patch"
+
+PKG_NAMES="libisocodes1 libisocodes-common libisocodes-devel girepository-libisocodes1 vala-libisocodes"
+libisocodes1_REQUIRES="iso-codes libisocodes-common"
+libisocodes1_CONTENTS="usr/bin/cygisocodes-1.dll"
+libisocodes_common_CONTENTS="
+	usr/share/doc/libisocodes/
+	usr/share/locale/
+"
+libisocodes_devel_REQUIRES="girepository-libisocodes1 vala-libisocodes"
+libisocodes_devel_CONTENTS="
+	usr/include/libisocodes.h
+	usr/lib/libisocodes.dll.a
+	usr/lib/pkgconfig/libisocodes.pc
+"
+girepository_libisocodes1_REQUIRES="libisocodes1" # inserted into typelib
+girepository_libisocodes1_CONTENTS="usr/*/gir*-1.0/libisocodes-1.*"
+vala_libisocodes_CONTENTS="usr/share/vala/vapi/libisocodes.*"
+
